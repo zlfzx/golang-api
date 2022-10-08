@@ -30,10 +30,6 @@ func Init(app *contracts.App) {
 
 	book := v1.Party("/book")
 	{
-		book.Get("/", func(c iris.Context) {
-			c.JSON(iris.Map{
-				"data": "OKOK",
-			})
-		})
+		book.Get("/", handlers.GetBooks)
 	}
 }

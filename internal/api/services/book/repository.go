@@ -1,4 +1,4 @@
-package author
+package book
 
 import (
 	"fmt"
@@ -24,7 +24,7 @@ type Statement struct {
 	delete   *sqlx.Stmt
 }
 
-func initRepository(dbWriter *sqlx.DB, dbReader *sqlx.DB) contracts.AuthorRepository {
+func initRepository(dbWriter *sqlx.DB, dbReader *sqlx.DB) contracts.BookRepository {
 	stmts := Statement{
 		insert:   datasources.PrepareNamed(dbWriter, insert),
 		update:   datasources.PrepareNamed(dbWriter, update),
@@ -42,42 +42,43 @@ func initRepository(dbWriter *sqlx.DB, dbReader *sqlx.DB) contracts.AuthorReposi
 	return &r
 }
 
-func (r Repository) Find() (authors []entities.Author, err error) {
-	err = r.stmt.findList.Select(&authors)
+func (r Repository) Find() (books []entities.Book, err error) {
+	err = r.stmt.findList.Select(&books)
 	if err != nil {
 		alog.Logger.Error(fmt.Errorf("fail to get list , err: %v", err))
 	}
 	return
 }
 
-func (r Repository) FindById(id int) (author entities.Author, err error) {
+func (r Repository) FindById(id int) (book entities.Book, err error) {
 	row := r.stmt.findById.QueryRow(id)
 	err = row.Scan(
-		&author.ID,
-		&author.Name,
-		&author.CreatedAt,
-		&author.UpdatedAt,
+		&book.ID,
+		&book.Title,
+		&book.AuthorID,
+		&book.CreatedAt,
+		&book.UpdatedAt,
 	)
 
 	if err != nil {
-		alog.Logger.Error(fmt.Errorf("fail to get author by id, err: %v", err))
+		alog.Logger.Error(fmt.Errorf("fail to get book by id, err: %v", err))
 	}
 	return
 }
 
-func (r Repository) Insert(author entities.Author) (err error) {
-	_, err = r.stmt.insert.Exec(author)
+func (r Repository) Insert(book entities.Book) (err error) {
+	_, err = r.stmt.insert.Exec(book)
 	if err != nil {
-		alog.Logger.Error(fmt.Errorf("error while inserting author, err: %v", err))
+		alog.Logger.Error(fmt.Errorf("fail to insert book, err: %v", err))
 	}
 
 	return err
 }
 
-func (r Repository) Update(author entities.Author) (err error) {
-	_, err = r.stmt.update.Exec(author)
+func (r Repository) Update(book entities.Book) (err error) {
+	_, err = r.stmt.update.Exec(book)
 	if err != nil {
-		alog.Logger.Error(fmt.Errorf("error while updating author, err: %v", err))
+		alog.Logger.Error(fmt.Errorf("fail to update book, err: %v", err))
 	}
 
 	return err
@@ -86,7 +87,7 @@ func (r Repository) Update(author entities.Author) (err error) {
 func (r Repository) Delete(id int) (err error) {
 	_, err = r.stmt.delete.Exec(id)
 	if err != nil {
-		alog.Logger.Error(fmt.Errorf("error while deleting author, err: %v", err))
+		alog.Logger.Error(fmt.Errorf("fail to delete book, err: %v", err))
 	}
 
 	return err
