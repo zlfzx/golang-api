@@ -4,6 +4,7 @@ import (
 	"golang-api/internal/api/contracts"
 	"golang-api/internal/api/handlers"
 	"golang-api/internal/api/routers"
+	"golang-api/pkg/alog"
 	"net/http"
 	"os"
 	"time"
@@ -31,6 +32,7 @@ func main() {
 	}
 
 	initConfig()
+	alog.Init()
 
 	initDatasources()
 

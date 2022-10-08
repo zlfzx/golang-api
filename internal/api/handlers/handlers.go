@@ -25,7 +25,7 @@ func httpSuccess(c iris.Context, data interface{}, message string) {
 func httpError(c iris.Context, httpError ahttp.ErrorResponse, err error) {
 	c.StatusCode(httpError.Status)
 
-	alog.Logger.Error(err)
+	alog.Logger.Error(err.Error())
 
 	if os.Getenv(constants.AppEnv) == constants.EnvDevelopment {
 		traces := alog.GetTracer(err)
