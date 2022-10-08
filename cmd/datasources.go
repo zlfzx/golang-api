@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"golang-api/internal/api/constants"
 	"golang-api/internal/api/contracts"
+	"golang-api/pkg/alog"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -23,11 +24,9 @@ func initDatasources() {
 		dbWriter.SetMaxOpenConns(10)
 		dbWriter.SetMaxIdleConns(10)
 
-		// log
-		fmt.Println("Initalizing Writer DB: Pass")
+		alog.Logger.Printf("Initalizing Writer DB: Pass")
 	} else {
-		// log
-		panic(err)
+		alog.Logger.Panicf("error while connecting to writer db: %s", err)
 	}
 
 	if dbReader, err = sqlx.Connect(app.Config[constants.DbDialeg], dsReader); err == nil {
@@ -35,12 +34,9 @@ func initDatasources() {
 		dbReader.SetMaxOpenConns(10)
 		dbReader.SetMaxIdleConns(10)
 
-		// log
-		fmt.Println("Initalizing Reader DB: Pass")
+		alog.Logger.Printf("Initalizing Reader DB: Pass")
 	} else {
-		// log
-
-		panic(err)
+		alog.Logger.Panicf("error while connecting to reader db: %s", err)
 	}
 
 	ds := &contracts.Datasources{
